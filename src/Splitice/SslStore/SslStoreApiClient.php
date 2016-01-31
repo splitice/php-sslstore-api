@@ -6,18 +6,24 @@ class SslStoreApiClient
 	private $ch;
 	private $host;
 
-	public function __construct($cert, $key, $ca, $host)
+	public function __construct($ca, $host, $cert = null, $key = null)
 	{
 		$this->host = $host;
 		$this->ch = curl_init();
 
-		curl_setopt($this->ch, CURLOPT_SSLCERT, $cert);
-		curl_setopt($this->ch, CURLOPT_SSLKEY, $key);
+		if($cert){
+			$this->set_key($cert, $key);
+		}
 		curl_setopt($this->ch, CURLOPT_CAINFO, $ca);
 		curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($this->ch, CURLOPT_TIMEOUT, 20);
+	}
+
+	private function set_key($cert, $key){
+		curl_setopt($this->ch, CURLOPT_SSLCERT, $cert);
+		curl_setopt($this->ch, CURLOPT_SSLKEY, $key);
 	}
 
 	function __destruct()
