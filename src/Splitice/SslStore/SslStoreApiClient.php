@@ -21,7 +21,7 @@ class SslStoreApiClient
 		curl_setopt($this->ch, CURLOPT_TIMEOUT, 20);
 	}
 
-	private function set_key($cert, $key){
+	public function set_key($cert, $key){
 		curl_setopt($this->ch, CURLOPT_SSLCERT, $cert);
 		curl_setopt($this->ch, CURLOPT_SSLKEY, $key);
 	}
@@ -29,6 +29,11 @@ class SslStoreApiClient
 	function __destruct()
 	{
 		curl_close($this->ch);
+	}
+
+	function __clone()
+	{
+		$this->ch = curl_copy_handle ($this->ch);
 	}
 
 	public function upload_data($remote_path, $data, $verify = true)
